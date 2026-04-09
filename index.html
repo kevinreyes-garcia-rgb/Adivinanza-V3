@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🎀 Adivinanzas Kawaii 🎀</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --pink:#ff8fb0;
+      --hotpink:#ff5fa3;
+      --lav:#c9a7ff;
+      --mint:#9bf3e6;
+      --bg:#fff7fb;
+      --ink:#433a4a;
+      --white:#ffffff;
+      --shadow:0 10px 25px rgba(255,95,163,.25);
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:'Nunito', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color:var(--ink);
+      background: var(--bg);
+      overflow:hidden;
+    }
+
+    /* Fondo dinámico */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      filter:brightness(0.85) saturate(1.05) blur(2px);
+      transform:scale(1.03);
+      z-index:-2;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:linear-gradient(180deg, rgba(255,247,251,.75), rgba(255,247,251,.85));
+      z-index:-1;
+    }
+
+    .app{
+      display:grid;
+      place-items:center;
+      height:100%;
+      padding:24px;
+    }
+    .card{
+      width:min(760px, 92vw);
+      background:var(--white);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:28px;
+      border:4px solid var(--pink);
+      position:relative;
+    }
+    .ribbon{
+      position:absolute;
+      top:-14px; left:24px;
+      background:linear-gradient(90deg, var(--hotpink), var(--lav));
+      color:var(--white);
+      padding:8px 14px;
+      border-radius:12px;
+      font-weight:900;
+      letter-spacing:.5px;
+      box-shadow:0 6px 16px rgba(201,167,255,.35);
+    }
+    .title{
+      display:flex; align-items:center; gap:10px;
+      font-size:28px; font-weight:900;
+      color:var(--hotpink);
+      margin:16px 0 12px;
+    }
+    .title .emoji{font-size:28px}
+    .subtitle{ font-size:16px; color:#6a5b78; margin:0 0 18px; }
+
+    .status-bar{
+      display:flex; gap:10px; flex-wrap:wrap; margin:10px 0 18px;
+    }
+    .pill{
+      background:linear-gradient(90deg, #ffe1ee, #e8f9f5);
+      border:2px solid var(--pink);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:700; color:#5a4a66;
+    }
+    .question{
+      background:#fff4fa;
+      border:2px dashed var(--hotpink);
+      border-radius:16px;
+      padding:16px;
+      margin:8px 0 16px;
+      font-size:18px;
+    }
+    .input-row{ display:flex; gap:10px; flex-wrap:wrap; margin:8px 0 10px; }
+    input[type="text"]{
+      flex:1;
+      min-width:220px;
+      padding:12px 14px;
+      border:2px solid var(--lav);
+      border-radius:14px;
+      font-size:16px;
+      outline:none;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    input[type="text"]:focus{
+      border-color:var(--hotpink);
+      box-shadow:0 0 0 6px rgba(255,95,163,.15);
+    }
+    .btn{
+      padding:12px 16px;
+      border:none;
+      border-radius:14px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .08s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .btn-primary{
+      background:linear-gradient(90deg, var(--hotpink), var(--lav));
+      color:var(--white);
+      box-shadow:0 8px 16px rgba(255,95,163,.35);
+    }
+    .btn-ghost{
+      background:#f3e9ff; color:#5a4a66; border:2px solid var(--lav);
+    }
+    .btn:active{ transform:scale(.98); }
+
+    .feedback{ min-height:28px; margin:4px 0 6px; font-weight:800; }
+    .correct{ color:#1f9d77; }
+    .wrong{ color:#c63c7c; }
+    .hint{ font-size:14px; color:#77668a; }
+
+    .progress{ height:10px; background:#ffe6f1; border-radius:999px; overflow:hidden; margin:8px 0 4px; }
+    .bar{ height:100%; width:0%; background:linear-gradient(90deg, var(--mint), var(--hotpink)); transition:width .35s ease; }
+
+    .sparkles{ position:absolute; inset:-8px; pointer-events:none; }
+    .sparkle{
+      position:absolute;
+      width:14px;height:14px;border-radius:4px;
+      background:radial-gradient(circle, #fff 0%, #ffe0f0 40%, transparent 70%);
+      animation: twinkle 2.4s infinite ease-in-out;
+      filter: drop-shadow(0 0 6px rgba(255, 160, 210, .8));
+    }
+
+    @keyframes twinkle {
+      0%{ transform:scale(0.7) rotate(0deg); opacity:.7; }
+      50%{ transform:scale(1.1) rotate(45deg); opacity:1; }
+      100%{ transform:scale(0.7) rotate(0deg); opacity:.7; }
+    }
+
+    @media (max-width:520px){
+      .title{ font-size:24px }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="card">
+      <div class="ribbon">✨ Modo Dulce ✨</div>
+      <div class="sparkles"></div>
+
+      <div class="title">
+        <span class="emoji">🎀</span>
+        <span>Adivinanzas Kawaii</span>
+        <span class="emoji">🧠💫</span>
+      </div>
+      <p class="subtitle">Responde la adivinanza. Tienes 3 intentos. ¡Pistas bonitas incluidas! 🍓</p>
+
+      <div class="status-bar">
+        <div class="pill">⏳ <strong>Tiempo</strong>: <span id="timer">00:30</span></div>
+        <div class="pill">💖 <strong>Intentos</strong>: <span id="tries">3</span></div>
+        <div class="pill">⭐ <strong>Puntaje</strong>: <span id="score">0</span></div>
+      </div>
+
+      <div class="question" id="question">Soy pequeño y redondo, rojo brillante. Tengo semillas por fuera. ¿Quién soy? 🍓</div>
+
+      <div class="input-row">
+        <input id="answer" type="text" placeholder="Escribe tu respuesta aquí..." />
+        <button class="btn btn-primary" id="submit">✨ Responder</button>
+        <button class="btn btn-ghost" id="hintBtn">💡 Pista</button>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+      <div class="hint" id="hint"></div>
+
+      <div class="progress"><div class="bar" id="bar"></div></div>
+
+      <div class="footer">
+        <div>🌸 Nivel: <span id="level">1</span> / <span id="total">3</span></div>
+        <div>
+          <button class="btn btn-ghost" id="next">➡️ Siguiente</button>
+          <button class="btn btn-ghost" id="reset">🔄 Reiniciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Adivinanzas (nivel, pregunta, respuesta, pistas)
+  const riddles = [
+    {
+      q: "Soy pequeño y redondo, rojo brillante. Tengo semillas por fuera. ¿Quién soy? 🍓",
+      a: ["fresa","frutilla","strawberry"],
+      hints: ["Soy una fruta.", "Mis semillas están por fuera.", "Soy muy usada en postres kawaii."]
+    },
+    {
+      q: "No tengo boca, pero puedo hablar. No tengo oídos, pero puedo escuchar. ¿Qué soy? 🔊",
+      a: ["eco"],
+      hints: ["Vivo en montañas y habitaciones vacías.", "Repito lo que dices.", "Sueno igual que tu voz."]
+    },
+    {
+      q: "Vuelo sin alas, lloro sin ojos. Siempre que voy, el mundo sonríe. ¿Qué soy? 🌬️",
+      a: ["nube","nubes","viento","brisa"],
+      hints: ["Estoy en el cielo.", "A veces soy suave, a veces tormentosa.", "Me muevo y cambio de forma."]
+    }
+  ];
+
+  // Estado
+  let level = 0;
+  let score = 0;
+  let tries = 3;
+  let timeLeft = 30;
+  let timerId = null;
+  let hintIndex = 0;
+
+  // DOM
+  const elQuestion = document.getElementById('question');
+  const elAnswer = document.getElementById('answer');
+  const elSubmit = document.getElementById('submit');
+  const elHintBtn = document.getElementById('hintBtn');
+  const elFeedback = document.getElementById('feedback');
+  const elHint = document.getElementById('hint');
+  const elTimer = document.getElementById('timer');
+  const elTries = document.getElementById('tries');
+  const elScore = document.getElementById('score');
+  const elLevel = document.getElementById('level');
+  const elTotal = document.getElementById('total');
+  const elBar = document.getElementById('bar');
+  const elNext = document.getElementById('next');
+  const elReset = document.getElementById('reset');
+  const sparkles = document.querySelector('.sparkles');
+
+  elTotal.textContent = riddles.length;
+
+  for(let i=0;i<24;i++){
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.left = (Math.random()*100)+'%';
+    s.style.top = (Math.random()*100)+'%';
+    s.style.animationDelay = (Math.random()*2)+'s';
+    sparkles.appendChild(s);
+  }
+
+  // Fondo WAIFU API
+  async function loadWaifuBackground(){
+    try{
+      const res = await fetch("https://api.waifu.pics/sfw/waifu");
+      const data = await res.json();
+
+      const style = document.createElement("style");
+      style.innerHTML = `
+        body::before{
+          background-image:url("${data.url}");
+        }
+      `;
+      document.head.appendChild(style);
+    }catch(e){
+      console.error("Error cargando waifu:", e);
+    }
+  }
+
+  function startTimer(){
+    clearInterval(timerId);
+    timeLeft = 30;
+    updateTimer();
+    timerId = setInterval(()=>{
+      timeLeft--;
+      updateTimer();
+      const pct = Math.max(0, (timeLeft/30)*100);
+      elBar.style.width = pct+'%';
+      if(timeLeft<=0){
+        clearInterval(timerId);
+        lockInput();
+        feedbackWrong("⏰ Se acabó el tiempo. La respuesta era: "+ riddle().a[0].toUpperCase());
+      }
+    }, 1000);
+  }
+
+  function updateTimer(){
+    const mm = String(Math.floor(timeLeft/60)).padStart(2,'0');
+    const ss = String(timeLeft%60).padStart(2,'0');
+    elTimer.textContent = `${mm}:${ss}`;
+  }
+
+  function riddle(){ return riddles[level]; }
+
+  function loadLevel(){
+    elQuestion.textContent = riddle().q;
+    elLevel.textContent = (level+1);
+    elFeedback.textContent = '';
+    elHint.textContent = '';
+    hintIndex = 0;
+    tries = 3;
+    elTries.textContent = tries;
+    elBar.style.width = '100%';
+    unlockInput();
+    elAnswer.value = '';
+    elAnswer.focus();
+    startTimer();
+  }
+
+  function normalize(str){
+    return (str||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  }
+
+  function check(){
+    const val = normalize(elAnswer.value);
+    if(!val){ return; }
+    const ok = riddle().a.map(normalize).includes(val);
+    if(ok){
+      score += Math.max(10, timeLeft);
+      elScore.textContent = score;
+      feedbackCorrect("🥳 ¡Correcto! Eres una mente brillante.");
+      clearInterval(timerId);
+      lockInput();
+    }else{
+      tries--;
+      elTries.textContent = tries;
+      if(tries<=0){
+        clearInterval(timerId);
+        feedbackWrong("💔 Sin intentos. La respuesta era: "+ riddle().a[0].toUpperCase());
+        lockInput();
+      }else{
+        feedbackWrong("🙈 No es esa. ¡Inténtalo de nuevo!");
+      }
+    }
+  }
+
+  function feedbackCorrect(msg){
+    elFeedback.textContent = msg;
+    elFeedback.className = 'feedback correct';
+  }
+  function feedbackWrong(msg){
+    elFeedback.textContent = msg;
+    elFeedback.className = 'feedback wrong';
+  }
+
+  function showHint(){
+    const hints = riddle().hints;
+    if(hintIndex < hints.length){
+      elHint.textContent = "💡 Pista: " + hints[hintIndex];
+      hintIndex++;
+    } else {
+      elHint.textContent = "✨ No hay más pistas. ¡Confía en tu intuición!";
+    }
+  }
+
+  function lockInput(){
+    elAnswer.disabled = true;
+    elSubmit.disabled = true;
+    elHintBtn.disabled = true;
+  }
+  function unlockInput(){
+    elAnswer.disabled = false;
+    elSubmit.disabled = false;
+    elHintBtn.disabled = false;
+  }
+
+  function nextLevel(){
+    if(level < riddles.length-1){
+      level++;
+      loadLevel();
+    } else {
+      elQuestion.textContent = "🎉 ¡Has completado todas las adivinanzas! Puntaje final: "+score+" 🌟";
+      elFeedback.textContent = "Gracias por jugar. ¿Quieres reiniciar para mejorar tu puntaje?";
+      lockInput();
+      clearInterval(timerId);
+      elBar.style.width = '0%';
+    }
+  }
+
+  function resetGame(){
+    level = 0; score = 0;
+    elScore.textContent = score;
+    loadLevel();
+  }
+
+  elSubmit.addEventListener('click', check);
+  elAnswer.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ check(); }});
+  elHintBtn.addEventListener('click', showHint);
+  elNext.addEventListener('click', nextLevel);
+  elReset.addEventListener('click', resetGame);
+
+  // INICIAR
+  loadWaifuBackground();
+  loadLevel();
+</script>
+
+</body>
+</html>
