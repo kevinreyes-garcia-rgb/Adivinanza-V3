@@ -1,6 +1,6 @@
 <details>
   <summary>Instalacion</summary>
 
-[Adivinanzas]()
+[Adivinanzas](https://kevinreyes-garcia-rgb.github.io/Adivinanza-V3/)
   
 </details>
